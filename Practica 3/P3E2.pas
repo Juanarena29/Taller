@@ -1,6 +1,6 @@
 program dos;
 const
-  cod = 61;
+  cod = 21;
   can = 20;
 type 
   dias = 1..31;
@@ -64,6 +64,17 @@ end;
 
 
 procedure generararboles(var a: arbola; var b: arbolb; var c: arbolc);
+
+Procedure enOrden ( a : arbola );
+begin
+   if ( a <> nil ) then begin
+    enOrden (a^.HI);
+    writeln('CODIGO:  ',a^.dato.codigo);
+    writeln('FECHA : ',a^.dato.fecha.dia,'/', a^.dato.fecha.mes,'/',a^.dato.fecha.anio);//o cualquier otra acción
+    writeln;
+    enOrden (a^.HD);
+   end;
+end;
 
 procedure arbolaa(var a: arbola; v : venta);
 begin
@@ -133,6 +144,7 @@ begin
   leerventa(v);
   while v.codigo <> 0 do begin
     arbolaa(a,v);
+    enOrden(a);
     arbolbb(b,v);
     arbolcc(c,v);
     leerventa(v);
@@ -173,24 +185,15 @@ begin
   generararboles(a,b,c);   
   writeln;
   writeln('Cantidad de productos en fecha');
-  writeln('dia: ');readln(f.dia);
-  writeln('mes: ');readln(f.mes);
-  writeln('anio: ');readln(f.anio); 
+writeln;
+  writeln('DIA: ');readln(f.dia);
+
+  writeln('MES: ');readln(f.mes);
+ 
+  writeln('ANIO: ');readln(f.anio); 
   writeln('La cantidad de productos vendidos en la fecha  -  ',f.dia,'/',f.mes,'/',f.anio);
   writeln('cantidad : ', cantidad(a,f));
 end.   
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     

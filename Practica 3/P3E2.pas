@@ -68,9 +68,10 @@ procedure generararboles(var a: arbola; var b: arbolb; var c: arbolc);
 Procedure enOrden ( a : arbola );
 begin
    if ( a <> nil ) then begin
-    enOrden (a^.HI);
-    writeln('CODIGO:  ',a^.dato.codigo);
+    enOrden (a^.HI); 
     writeln('FECHA : ',a^.dato.fecha.dia,'/', a^.dato.fecha.mes,'/',a^.dato.fecha.anio);//o cualquier otra acción
+    writeln('CODIGO:  ',a^.dato.codigo);
+     writeln('CANTIDAD:  ',a^.dato.cantidad);
     writeln;
     enOrden (a^.HD);
    end;
@@ -173,7 +174,30 @@ begin
   cantidad := total;  // Devolver el resultado
 end;
 
-   
+function mayorcant(b : arbolb): integer;
+
+procedure buscar(b : arbolb; var mayor : integer;var codemayor : integer);
+begin
+  if b <> nil then begin
+    buscar(b^.hi,mayor,codemayor);
+    if b^.cantidadb>mayor then 
+      begin
+        codemayor:=b^.codigob;
+        mayor:= b^.cantidadb;
+        end;
+   buscar(b^.hd,mayor,codemayor);
+   end;
+end;
+
+var mayor,codemayor : integer;
+begin
+  mayor:=-1;
+  codemayor:=-1;
+  buscar(b,mayor,codemayor);
+  mayorcant:=codemayor;
+end;
+  
+
 var
   a : arbola;
   b : arbolb;
@@ -193,9 +217,10 @@ writeln;
   writeln('ANIO: ');readln(f.anio); 
   writeln('La cantidad de productos vendidos en la fecha  -  ',f.dia,'/',f.mes,'/',f.anio);
   writeln('cantidad : ', cantidad(a,f));
+  writeln;
+  writeln('El codigo del producto mas vendido es: ', mayorcant(b));
+  
 end.   
-    
-    
     
     
     

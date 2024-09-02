@@ -17,6 +17,10 @@ begin
 end;
 
 {-----PREORDEN-----}
+{ Preorden (preOrden)
+Orden de visita: Raíz → Hijo Izquierdo → Hijo Derecho
+Descripción: En la búsqueda en preorden, primero se procesa el nodo raíz, luego se recorre el subárbol izquierdo en preorden, y finalmente se recorre el subárbol derecho en preorden.
+Secuencia de ejecución: El valor del nodo actual (a^.dato) se procesa antes de explorar los subárboles.}
 Procedure preOrden (a:arbol);
 begin
    if ( a <> nil ) then 
@@ -28,6 +32,10 @@ begin
 end;
 
 {-----POSTORDEN-----}
+{Postorden (postOrden)
+Orden de visita: Hijo Izquierdo → Hijo Derecho → Raíz
+Descripción: En la búsqueda en postorden, primero se recorren los subárboles izquierdo y derecho (en ese orden) en postorden, y finalmente se procesa el nodo raíz.
+Secuencia de ejecución: El valor del nodo actual (a^.dato) se procesa después de haber explorado ambos subárboles.}
 Procedure postOrden (a:arbol);
 begin
    if ( a <> nil ) then 
@@ -37,7 +45,9 @@ begin
       write (a^.dato);
    end;
 end;
-
+{Preorden: Procesa primero el nodo y luego los subárboles. Es útil para clonar árboles o imprimir su estructura.
+Postorden: Procesa primero los subárboles y luego el nodo. Es útil para eliminar árboles o calcular propiedades acumulativas desde las hojas hasta la raíz.
+Ambos métodos son formas de recorridos en profundidad (DFS, Depth-First Search), pero la diferencia está en cuándo se visita la raíz en relación con sus hijos.}
 
 {-----BUSQUEDAS-----}
 

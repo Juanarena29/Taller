@@ -5,12 +5,12 @@ const
 type 
   dias = 1..31;
   meses = 1..12;
-  años = 2022..2024;
-  
+  anios = 2022..2024;
+ 
   fechas = record
     dia : dias;
     mes : meses;
-    año: años;
+    anio: anios;
     end;  
     
   venta = record
@@ -39,7 +39,7 @@ type
   listac = ^nodolista;
   
   nodolista=record
-    dato : cant;
+    dato : integer;
     sig : listac;
     end;
 
@@ -58,14 +58,14 @@ begin
   v.codigo:=random(cod);
   v.fecha.dia:=random(31)+1;
   v.fecha.mes:=random(12)+1;
-  v.fecha.año:=random(3)+2022;
+  v.fecha.anio:=random(3)+2022;
   v.cantidad:=random(can)+1;
 end;
 
 
-procedure generararboles(var a,b,c : arbol)
+procedure generararboles(var a: arbola; var b: arbolb; var c: arbolc);
 
-procedure arbolaa(var a: arbol; v : venta);
+procedure arbolaa(var a: arbola; v : venta);
 begin
   if a = nil then
     begin
@@ -79,25 +79,26 @@ begin
       else arbolaa(a^.hi,v);
 end;  
 
-procedure arbolbb(var b: arbol; v : venta);
+procedure arbolbb(var b: arbolb; v : venta);
 begin  
   if b = nil then
     begin
     new(b);
-    b^.dato.codigob:=v.codigo;
-    b^.dato.cantidadb:=v.cantidad;
+    b^.codigob:=v.codigo;
+    b^.cantidadb:=v.cantidad;
     b^.hi:=nil;
     b^.hd:=nil; 
     end
     else
-      if v.codigo >= b^.dato.codigob then arbolbb(b^.hd,v)
+      if v.codigo >= b^.codigob then arbolbb(b^.hd,v)
       else arbolbb(b^.hi,v);
 end;
 
-procedure arbolcc(var c:arbol; v : venta);
+procedure arbolcc(var c:arbolc; v : venta);
 
-procedure agregaradelante(var l : lista; num : integer);
-var aux : lista;
+
+procedure agregaradelante(var l : listac; num : integer);
+var aux : listac	;
 begin
   new(aux);
   aux^.dato:=num;
@@ -105,11 +106,11 @@ begin
   l:=aux;
 end; 
  
-  
+
 begin
   if c = nil then
     begin
-      new(c)
+      new(c);
       c^.codigoc:=v.codigo;
       c^.lista:=nil; //inicializo la lista de venta en nil
       c^.hi:=nil;
@@ -138,36 +139,35 @@ begin
     end;
 end;
   
-function cantidad(a: arbol; f: fecha): integer;
-var 
-  total: integer;
+function cantidad(a: arbola; f: fechas): integer;
 
-procedure acumular(a: arbol; f: fecha; var total: integer);
+  procedure acumular(a: arbola; f: fechas; var total: integer);
 begin
   if a <> nil then 
   begin
     acumular(a^.hi, f, total);  // Recorrer el subárbol izquierdo
-    if a^.dato.fecha = f then 
+    if (a^.dato.fecha.dia=f.dia) and (a^.dato.fecha.mes = f.mes) and (a^.dato.fecha.anio=f.anio) then 
       total := total + a^.dato.cantidad;  // Sumar cantidad si la fecha coincide
     acumular(a^.hd, f, total);  // Recorrer el subárbol derecho
   end;
 end;
 
+var 
+  total: integer;
+  
 begin
   total := 0;  // Inicializar total en 0 antes de comenzar
   acumular(a, f, total);  // Llamar al procedimiento auxiliar
   cantidad := total;  // Devolver el resultado
 end;
 
-
-      
+   
 var
   a : arbola;
   b : arbolb;
   c : arbolc;
-  diax : dias;
-  mesx : meses;
-  añox : años;
+  f : fechas;
+ 
 begin
   randomize;
   generararboles(a,b,c);   
@@ -175,9 +175,12 @@ begin
   writeln('Cantidad de productos en fecha');
   writeln('dia: ');readln(f.dia);
   writeln('mes: ');readln(f.mes);
-  writeln('año: ');readln(f.año);
-  writeln('La cantidad de productos vendidos en la fecha  -  ',f.dia,'/',f.mes,'/',f.año);
-  writeln('cantidad : ', cantidad(a,f);
+  writeln('anio: ');readln(f.anio); 
+  writeln('La cantidad de productos vendidos en la fecha  -  ',f.dia,'/',f.mes,'/',f.anio);
+  writeln('cantidad : ', cantidad(a,f));
+end.   
+    
+    
     
     
     

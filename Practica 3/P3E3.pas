@@ -134,6 +134,37 @@ begin
     end;
 end;
 
-procedure promedios
+procedure promedios(a : arbol;valor : real);
+
+function funpromedio(l : listafinal): real;
+var
+cantfin : integer;
+notatotal : integer;
+begin
+  cantfin:=0;
+  notatotal:=0;
+  while l<>nil then begin
+    cantfin:=cantfin + 1;
+    notatotal := notatotal + l^.dato.nota;
+    l:=l^.sig;
+    end;
+  promedio := (notatotal / cantfin);
+end;
+
+begin
+  if a<>nil then begin
+    promedios(a^.hi,valor);
+    if funpromedio(a^.dato.finales) > valor then begin
+      writeln('Alumno de legajo: ',a^.dato.legajo);
+      writeln('tiene un promedio mayor a ',valor0);
+      end;
+    promedios(a^.hd,valor);
+    end;
+end;
+
+var
+
+begin
 
 
+end;

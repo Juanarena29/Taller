@@ -245,14 +245,16 @@ begin
   else existesocio:=existesocio(a^.HI,valor);
 end;
 
+function socioentrerango(a : arbol; izq,der : integer): integer;
+begin
+  if a = nil then 
+    socioentrerango:=0
+  else if (a^.dato.numero>izq) and (a^.dato.numero<der) then
+	socioentrerango:=socioentrerango(a^.HI,izq,der) + socioentrerango(a^.HD,izq,der) + 1
+  else if a^.dato.numero < izq then socioentrerango:=socioentrerango(a^.HD,izq,der)
+	else  socioentrerango:=socioentrerango(a^.HI,izq,der);
 
-
-
-
-
-
-
-
+end;
 
 
 var a: arbol; 
@@ -261,6 +263,7 @@ s : socio;
 cant : integer;
 numsocio : integer;
 valor : integer;
+izq,der : integer;
 Begin
   randomize;
   GenerarArbol(a);
@@ -287,4 +290,9 @@ Begin
   writeln;
   if existesocio(a,valor) then writeln('EXISTE EL SOCIO')
   else writeln('NO EXISTE EL SOCIO');
+  writeln;
+  writeln('Escriba valor inferior del rango: ');readln(izq);
+  writeln('Escriba valor superior del rango: ');readln(der);
+  writeln;
+  writeln('Dentro del rango existen ',socioentrerango(a,izq,der),' socios');
 End.

@@ -105,14 +105,14 @@ end;
 
 procedure leerlegajos(a : arbol;var contador : integer);
 begin
-  if a = nil then begin
+  if a <> nil then begin
       leerlegajos(a^.hi,contador);
        if esimpar(a^.dato.legajo) then contador := contador + 1;
       leerlegajos(a^.hd,contador)
     end;
 end;
 
-procedure finaprobados(a : arbol;var cant : integer);
+procedure finaprobados(a : arbol;var canti : integer);
 
 procedure recorrerlista(l : listafinal; var cant: integer);
 begin
@@ -123,8 +123,7 @@ begin
     end;
 end;
 
-var 
-  canti : integer;
+  
 begin
   if a <> nil then begin
     finaprobados(a^.hi,canti);
@@ -166,6 +165,7 @@ contador : integer;
 cant : integer;
 valor : real;
 begin
+a := nil;
 randomize;
 generararboles(a);
 contador := 0;

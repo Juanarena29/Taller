@@ -1,46 +1,48 @@
 Program P3E3;
+
 const
   codmat = 50;
+
 type
   dias = 1..31;
   meses = 1..12;
   anios = 2020..2024;
-  
+
   fechas = record
-    dia : dias;
-    mes : meses;
+    dia  : dias;
+    mes  : meses;
     anio : anios;
-    end;
-  
-  finalx = record
+  end;
+
+  examen = record
     codigomat : 1..codmat;
-    fecha : fechas;
-    nota : 1..10;
-    end;
-  
+    fecha     : fechas;
+    nota      : 1..10;
+  end;
+
   listafinal = ^nodofinal;
-  
+
   nodofinal = record
-    dato : finalx;
-    sig : listafinal;
-    end;
-   
-   datofinal = record
+    dato : examen;
+    sig  : listafinal;
+  end;
+
+  finalalumno = record
     legajo : integer;
-    finales : listafinal;
-    end;
-   
-  arbol=^alumno;
-  
+    final  : listafinal;
+  end;
+
+  arbol = ^alumno;
+
   alumno = record
-    dato : datofinal;
-    hi : arbol;
-    hd : arbol;
-    end;
+    dato : finalalumno;
+    hi   : arbol;
+    hd   : arbol;
+  end;
 
-procedure leerfinal(var f : finalx);
-
-  begin
+procedure finalalumnos(var d : finalalumno; var f : examen);
+begin
+  d.legajo := random(20);
   f.codigomat := random(codmat);
   f.fecha.dia := random(31) + 1;
   f.fecha.mes := random(12) + 1;
@@ -48,136 +50,168 @@ procedure leerfinal(var f : finalx);
   f.nota := random(10) + 1;
 end;
 
-procedure finalalumno(var d : datofinal);
-var f : finalx;
-begin
-  d.legajo:=random(20);
-  leerfinal(f);
-  d.finales^.dato:=f;
-end;
-
 procedure generararboles(var a : arbol);
 
- procedure agregaradelante(var l: listafinal; final : finalx);
-    var
-      aux: listafinal;
+  procedure agregaradelante(var l: listafinal; final : examen);
+  var
+    aux: listafinal;
+  begin
+    new(aux);
+    aux^.dato := final;
+    aux^.sig := l;
+    l := aux;
+  end;
+
+  procedure arbol(var a : arbol; d : finalalumno; f : examen);
+  begin
+    if a = nil then
     begin
-      new(aux);
-      aux^.dato := final;
-      aux^.sig := l;
-      l := aux;
-    end;
-
-
-procedure arbol(var a : arbol; d : datofinal );
-
-
-begin
-  if a = nil then begin
-    new(a);
-    a^.dato.legajo:=d.legajo;
-    a^.dato.finales:=nil;
-    a^.hi:=nil;
-    a^.hd:=nil;
-    agregaradelante(a^.dato.finales,d.finales^.dato);
+      new(a);
+      a^.dato.legajo := d.legajo;
+      a^.dato.final := nil;
+      a^.hi := nil;
+      a^.hd := nil;
+      agregaradelante(a^.dato.final, f);
     end
-    else if d.legajo > a^.dato.legajo then arbol (a^.hd,d)
-    else arbol(a^.hi,d);
-end;
+    else if d.legajo = a^.dato.legajo then
+      agregaradelante(a^.dato.final, f)
+    else if d.legajo > a^.dato.legajo then
+      arbol(a^.hd, d, f)
+    else
+      arbol(a^.hi, d, f);
+  end;
+
 var
-d : datofinal;
+  d : finalalumno;
+  f : examen;
+
 begin
-  finalalumno(d);
-  while d.legajo <> 0 do begin
-    arbol(a,d);
-    finalalumno(d);
+  finalalumnos(d, f);
+  while d.legajo <> 0 do
+  begin
+    arbol(a, d, f);
+    finalalumnos(d, f);
   end;
   Writeln('----');
-  writeln('LISTA CARGADA');
+  Writeln('LISTA CARGADA');
   Writeln('----');
 end;
-
 
 function esimpar(num : integer): boolean;
 begin
   esimpar := (num MOD 2 = 1);
 end;
 
-procedure leerlegajos(a : arbol;var contador : integer);
+procedure leerlegajos(a : arbol; var contador : integer);
 begin
-  if a <> nil then begin
-      leerlegajos(a^.hi,contador);
-       if esimpar(a^.dato.legajo) then contador := contador + 1;
-      leerlegajos(a^.hd,contador)
-    end;
+  if a <> nil then
+  begin
+    leerlegajos(a^.hi, contador);
+    if esimpar(a^.dato.legajo) then
+      contador := contador + 1;
+    leerlegajos(a^.hd, contador);
+  end;
 end;
 
-procedure finaprobados(a : arbol;var canti : integer);
+procedure finaprobados(a : arbol; var canti : integer);
 
-procedure recorrerlista(l : listafinal; var cant: integer);
-begin
-  cant :=0;
-  while l<>nil do begin
-    if l^.dato.nota >= 4 then cant := cant + 1;
-    l:=l^.sig;
+  procedure recorrerlista(l : listafinal; var cant: integer);
+  begin
+    
+    while l <> nil do
+    begin
+      if l^.dato.nota >= 4 then
+        cant := cant + 1;
+      l := l^.sig;
     end;
+  end;
+
+begin
+  if a <> nil then
+  begin
+    finaprobados(a^.hi, canti);
+    recorrerlista(a^.dato.final, canti);
+    finaprobados(a^.hd, canti);
+  end;
 end;
 
-  
-begin
-  if a <> nil then begin
-    finaprobados(a^.hi,canti);
-    recorrerlista(a^.dato.finales,canti);
-    finaprobados(a^.hd,canti);
+procedure promedios(a : arbol; valor : real);
+
+  function funpromedio(l : listafinal): real;
+  var
+    cantfin    : integer;
+    notatotal  : integer;
+  begin
+    cantfin := 0;
+    notatotal := 0;
+    while l <> nil do
+    begin
+      cantfin := cantfin + 1;
+      notatotal := notatotal + l^.dato.nota;
+      l := l^.sig;
     end;
+    if cantfin = 0 then
+      funpromedio := 0
+    else
+      funpromedio := (notatotal / cantfin);
+  end;
+
+begin
+  if a <> nil then
+  begin
+    promedios(a^.hi, valor);
+    if funpromedio(a^.dato.final) > valor then
+    begin
+      Writeln('Alumno de legajo: ', a^.dato.legajo);
+      Writeln('tiene un promedio mayor a ', valor:2:2);
+    end;
+    promedios(a^.hd, valor);
+  end;
 end;
 
-procedure promedios(a : arbol;valor : real);
+procedure leerexamenes(l : listafinal);
+begin
+  while l <> nil do
+  begin
+    Writeln('nota examen: ', l^.dato.nota);
+    l := l^.sig;
+  end;
+end;
 
-function funpromedio(l : listafinal): real;
+procedure enorden(a : arbol);
+begin
+  if a <> nil then
+  begin
+    if a^.hi <> nil then
+      enorden(a^.hi);
+    Writeln('LEGAJO: ', a^.dato.legajo);
+    leerexamenes(a^.dato.final);
+    if a^.hd <> nil then
+      enorden(a^.hd);
+  end;
+end;
+
 var
-cantfin : integer;
-notatotal : integer;
-begin
-  cantfin:=0;
-  notatotal:=0;
-  while l<>nil do begin
-    cantfin:=cantfin + 1;
-    notatotal := notatotal + l^.dato.nota;
-    l:=l^.sig;
-    end;
-  funpromedio := (notatotal / cantfin);
-end;
+  a        : arbol;
+  contador : integer;
+  canti    : integer;
+  valor    : real;
 
 begin
-  if a<>nil then begin
-    promedios(a^.hi,valor);
-    if funpromedio(a^.dato.finales) > valor then begin
-      writeln('Alumno de legajo: ',a^.dato.legajo);
-      writeln('tiene un promedio mayor a ',valor);
-      end;
-    promedios(a^.hd,valor);
-    end;
-end;
-var
-a : arbol;
-contador : integer;
-cant : integer;
-valor : real;
-begin
-a := nil;
-randomize;
-generararboles(a);
-contador := 0;
-leerlegajos(a,contador);
-writeln;
-writeln('La cantidad de alumnos con legajo impar es: ', contador );
-writeln;
-writeln;
-cant := 0;
-finaprobados(a,cant);
-writeln;
-writeln('Escriba un valor real: ');readln(valor);
-promedios(a,valor);
-
+  a := nil;
+  randomize;
+  generararboles(a);
+  enorden(a);
+  contador := 0;
+  leerlegajos(a, contador);
+  Writeln;
+  Writeln('La cantidad de alumnos con legajo impar es: ', contador);
+  Writeln;
+  canti := 0;
+  finaprobados(a, canti);
+  Writeln('La cantidad de exámenes aprobados es: ', canti);
+  Writeln;
+  Writeln('Escriba un valor real: ');
+  Readln(valor);
+  promedios(a, valor);
 end.

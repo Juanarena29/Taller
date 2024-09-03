@@ -51,7 +51,7 @@ end;
 procedure finalalumno(var d : datofinal);
 var f : finalx;
 begin
-  d.legajo:=random(1000);
+  d.legajo:=random(20);
   leerfinal(f);
   d.finales^.dato:=f;
 end;
@@ -105,9 +105,7 @@ end;
 
 procedure leerlegajos(a : arbol;var contador : integer);
 begin
-  if a = nil then
-    contador := 0
-    else begin
+  if a = nil then begin
       leerlegajos(a^.hi,contador);
        if esimpar(a^.dato.legajo) then contador := contador + 1;
       leerlegajos(a^.hd,contador)
@@ -164,10 +162,22 @@ begin
 end;
 var
 a : arbol;
-
+contador : integer;
+cant : integer;
+valor : real;
 begin
 randomize;
 generararboles(a);
-
+contador := 0;
+leerlegajos(a,contador);
+writeln;
+writeln('La cantidad de alumnos con legajo impar es: ', contador );
+writeln;
+writeln;
+cant := 0;
+finaprobados(a,cant);
+writeln;
+writeln('Escriba un valor real: ');readln(valor);
+promedios(a,valor);
 
 end.

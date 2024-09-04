@@ -90,7 +90,7 @@ begin
   end;
 end;
 
-function menoresque(a : arbol; valor : integer): integer;
+function menoresque(a : arbol; valor : integer): integer; //arreglar,devuelve 0
 begin
   if a=nil then menoresque:=0 
   else begin
@@ -101,12 +101,26 @@ begin
     end;
 end;
 
-
+function entrerango(a:arbol; izq,der : integer): integer;
+begin
+  if a= nil then entrerango:=0
+  else begin
+    if (a^.dato.codigo>izq) and (a^.dato.codigo>der) then
+      entrerango:=entrerango(a^.hi,izq,der)+1+entrerango(a^.hd,izq,der)
+      else
+        if (a^.dato.codigo>izq) then
+          entrerango:=entrerango(a^.hi,izq,der)
+          else if (a^.dato.codigo<der) then
+            entrerango:=entrerango(a^.hd,izq,der);
+    end;
+end;
 var
   a : arbol;
   cantmay : integer;
   codemax : integer;
   valor : integer;
+  valinferior:integer;
+  valsuperior: integer;
 begin
   cantmay:=-1;
   generararbol(a);
@@ -118,5 +132,11 @@ begin
   writeln('Escriba un valor entero: ');readln(valor);
   writeln;
   writeln('La cantidad de productos con codigos menores a ',valor,' es : ',menoresque(a,valor));
+  writeln;
+  writeln('Escriba dos valores enteros para el rango: ');
+  writeln('Valor inferior: ');readln(valinferior);
+   writeln('Valor superior: ');readln(valsuperior);
+   writeln;
+   writeln('La cantidad de productos cuyo codigo se encuentra dentro del rango son: ',entrerango(a,valinferior,valsuperior));
+   
 end.
-

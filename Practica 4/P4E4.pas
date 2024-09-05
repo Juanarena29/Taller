@@ -1,4 +1,5 @@
-Program P4E4;
+
+   Program P4E4;
 type
  
   prestamos = record
@@ -43,6 +44,19 @@ type
     hi : arbol2;
     hd : arbol2;
     end;
+    
+  regarbol3 = record
+    isbn : integer;
+    cantprest : integer;
+    end;
+
+  arbol3= ^nodoarbol3;
+  
+  nodoarbol3 = record
+    dato : regarbol3;
+    hi : arbol3 ;
+     hd : arbol3 ;
+     end;
 
 Procedure moduloA(var a1 : arbol1; var a2 : arbol2);
 
@@ -144,7 +158,6 @@ begin
 end;  
 
 Procedure moduloE(a : arbol2; nrosocio: integer; var cant : integer);
-
 begin
   if a=nil then cant:=0
   else begin 
@@ -159,10 +172,52 @@ begin
 end;
 
 
+procedure moduloF( a1 : arbol1; var a3 : arbol3);
+
+procedure insertararbol3(var a:arbol3; codigo : integer);
+begin
+  if a=nil then begin
+    new(a);
+    a^.dato.isbn:=codigo;
+    a^.dato.cantprest := 1;
+    a^.hi:=nil;
+    a^.hd := nil;
+    end
+    else if 
+      codigo = a^.dato.isbn then 
+      a^.dato.cantprest := a^.dato.cantprest + 1
+      else if a^.dato.isbn < codigo then insertararbol3(a^.hd,codigo)
+      else insertararbol3(a^.hi,codigo);
+      end;
 
 
+procedure generararbol(var a3 : arbol3; a1:arbol1);
+begin
+  if a1<>nil then begin
+    generararbol(a3,a1^.hi);
+    insertararbol3(a3,a1^.dato.isbn);
+    generararbol(a3,a1^.hd);
+    end;
+end;
 
+begin
+  a3 := nil;
+  generararbol(a3,a1);
+  writeln('El arbol numero 3 se ha generado con exito');
+end;
 
+procedure imprimirarbol1(a : arbol1);
+begin
+  if a<>nil then begin
+    writeln('Isbn: ',a^.dato.isbn);
+    writeln('Socio: ',a^.dato.socio);
+    writeln('Dia/mes: ',a^.dato.dia,'/',a^.dato.mes);
+    writeln('Dias prestados: ',a^.dato.cdp);
+    writeln('-----------');
+    if a^.hi <> nil then imprimirarbol1(a^.hi);
+    if a^.hd <> nil then imprimirarbol1(a^.hd);
+    end;
+end;
 
 
 
@@ -196,14 +251,18 @@ end;
 var
   a1 : arbol1;
   a2 : arbol2;
+  a3 : arbol3;
   cantd : integer;
   sociod : integer;
 begin
   randomize;
   moduloA(a1,a2);
+  imprimirarbol1(a1);
+  writeln;
+  writeln;
   writeln('De la estructura 1, el ISBN mas grande es: ',moduloB(a1));
   writeln;
-  writeln('De la estructura 2, el ISBN mas pequeño es: ',moduloC(a2));
+  writeln('De la estructura 2, el ISBN mas pequenio es: ',moduloC(a2));
   cantd:=0;
   Writeln;
   writeln('Escriba el numero de socio que desea consultar: ');readln(sociod);
@@ -214,12 +273,8 @@ begin
   cantd:=0;
   moduloE(a2,sociod,cantd);
   Writeln('E2 - El socio ',sociod,' tuvo un total de ',cantd,' prestamos.');
-
+  writeln;
+  writeln('Arbol 3');
+  writeln;
+  moduloF(a1,a3);
 end.
-
-
-
-
-
-
-

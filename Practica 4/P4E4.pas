@@ -219,7 +219,41 @@ begin
     end;
 end;
 
+procedure moduloG(var a4 : arbol3; a2 : arbol2);
 
+procedure insertararbol4(var a : arbol3;codigo : integer; cant : integer);
+begin
+  if a <> nil then begin
+    new(a);
+    a^.dato.isbn := codigo;
+    a^.dato.cantprest := 1;
+    a^.hi := nil;
+    a^.hd:= nil;
+    end
+    else if a^.dato.isbn < codigo then insertararbol4(a^.hi,codigo,cant)
+    else insertararbol4(a^.hd,codigo,cant);
+end;
+
+procedure generararbol4(var a4 : arbol3;a2 : arbol2);
+var cant : integer; l : lista;
+begin
+  if a4<>nil then begin
+    l:=a2^.dato.listadato;
+    if a2^.hi <> nil then generararbol4(a4,a2^.hi);
+    cant := 0;
+    while l<> nil do begin
+      cant := cant + 1;
+      l := l^.sig;
+      end;
+    insertararbol4(a4,a2^.dato.isbn,cant);
+    generararbol4(a4,a2);
+    end;
+end;
+begin
+  a4 :=nil;
+  generararbol4(a4,a2);
+  writeln('El arbol numero 4 se ha generado con exito');
+end;
 
 
 

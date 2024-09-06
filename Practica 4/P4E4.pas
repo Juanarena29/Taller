@@ -148,14 +148,15 @@ begin
     end;
 end;
 
-procedure moduloD(a : arbol1; nrosocio : integer;var cant : integer);
+function moduloD(a : arbol1; nrosocio : integer):integer;
 begin
-  if a<>nil then begin
-    if a^.dato.socio = nrosocio then cant := cant + 1;
-    if a^.hi <> nil then moduloD(a^.hi,nrosocio,cant);
-    if a^.hd <> nil then moduloD(a^.hd,nrosocio,cant);
+  if a=nil then moduloD:=0
+  else
+   if a^.dato.socio = nrosocio then 
+    moduloD:= 1+ moduloD(a^.hd,nrosocio) + moduloD(a^.hi,nrosocio)
+      else moduloD:=moduloD(a^.hd,nrosocio) + moduloD(a^.hi,nrosocio);
     end;
-end;  
+  
 
 Procedure moduloE(a : arbol2; nrosocio: integer; var cant : integer);
 begin
@@ -223,7 +224,7 @@ procedure moduloG(var a4 : arbol3; a2 : arbol2);
 
 procedure insertararbol4(var a : arbol3;codigo : integer; cant : integer);
 begin
-  if a <> nil then begin
+  if a = nil then begin
     new(a);
     a^.dato.isbn := codigo;
     a^.dato.cantprest := 1;
@@ -240,10 +241,10 @@ begin
   if a4<>nil then begin
     l:=a2^.dato.listadato;
     if a2^.hi <> nil then generararbol4(a4,a2^.hi);
-    cant := 0;
-    while l<> nil do begin
-      cant := cant + 1;
-      l := l^.sig;
+      cant := 0;
+      while l<> nil do begin
+        cant := cant + 1;
+        l:= l^.sig;
       end;
     insertararbol4(a4,a2^.dato.isbn,cant);
     generararbol4(a4,a2);
@@ -255,8 +256,30 @@ begin
   writeln('El arbol numero 4 se ha generado con exito');
 end;
 
+function moduloI(a : arbol1; izq,der : integer):integer;
+begin
+  if a=nil then moduloI:=0
+  else if (a^.dato.isbn >= izq) and (a^.dato.isbn <= der) then
+    moduloI:=1 + moduloI(a^.hi,izq,der) + moduloI(a^.hd,izq,der)
+    else if (a^.dato.isbn > izq) then if a^.hi <> nil then moduloI(a^.hi,izq,der)
+      else if (a^.dato.isbn) < der then if a^.hd <> nil then moduloI(a^.hd,izq,der);
+end;
 
+function moduloJ(a : arbol, min,max : integer): integer;
 
+procedure recorrerlista(l : lista; var cant : integer);
+begin
+  while l<>nil do begin
+    cant := cant + 1;
+    l := l^.sig;
+    end;
+end;
+var cant:integer;
+begin
+	if a = nil then moduloJ :=0
+		else begin
+		  
+     
 
 
 
@@ -286,7 +309,7 @@ var
   a1 : arbol1;
   a2 : arbol2;
   a3 : arbol3;
-  cantd : integer;
+  cantd, min,max : integer;
   sociod : integer;
 begin
   randomize;
@@ -300,7 +323,7 @@ begin
   cantd:=0;
   Writeln;
   writeln('Escriba el numero de socio que desea consultar: ');readln(sociod);
-  moduloD(a1,sociod,cantd);
+  cantd:=moduloD(a1,sociod);
   writeln;
   Writeln('E1 - El socio ',sociod,' tuvo un total de ',cantd,' prestamos.');
   writeln;
@@ -311,4 +334,11 @@ begin
   writeln('Arbol 3');
   writeln;
   moduloF(a1,a3);
+  writeln;
+  writeln('Escriba dos numeros dentro del rango [100,1900]');
+  writeln('Min: ');readln(min);
+  writeln;
+  writeln('Max: ');readln(max);
+  writeln;
+  writeln('La cantidad de socios dentro del rango especificado es: ', moduloI(a1,min,max));
 end.

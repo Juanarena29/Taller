@@ -101,6 +101,32 @@ begin
     end;
 end;
 
+procedure moduloC(a : arbol, var codemax, max : integer);
+begin
+  if a<>nil then begin
+    moduloC(a^.hi,codemax,max);
+    if a^.dato.univendidas > max then begin
+      codemax := a^.dato.codigo;
+      max := a^.dato.univendidas;
+      end;
+    moduloC(a^.hd,codemax,max);
+    end;
+end;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function entrerango(a:arbol; izq,der : integer): integer;
 begin
   if a= nil then entrerango:=0

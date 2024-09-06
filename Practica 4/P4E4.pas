@@ -1,6 +1,5 @@
-
-   Program P4E4;
-type
+Program P4E4;
+  type
  
   prestamos = record
     isbn : integer;
@@ -45,17 +44,16 @@ type
     hd : arbol2;
     end;
     
-  regarbol3 = record
+  reglista3 = record
     isbn : integer;
     cantprest : integer;
     end;
 
-  arbol3= ^nodoarbol3;
+  lista3= ^nodolista3;
   
-  nodoarbol3 = record
-    dato : regarbol3;
-    hi : arbol3 ;
-     hd : arbol3 ;
+  nodolista3 = record
+    dato : reglista3;
+    sig : lista3;
      end;
 
 Procedure moduloA(var a1 : arbol1; var a2 : arbol2);
@@ -158,160 +156,134 @@ begin
     end;
   
 
-Procedure moduloE(a : arbol2; nrosocio: integer; var cant : integer);
+function moduloE(a : arbol2; nrosocio: integer):integer;
+
+function recorrerlista(l : lista;nrosocio : integer):integer;
 begin
-  if a=nil then cant:=0
+  if l = nil then recorrerlista:=0
+  else if l^.dato.socio = nrosocio then
+    recorrerlista := 1 + recorrerlista(l^.sig,nrosocio)
+    else recorrerlista:= recorrerlista(l^.sig,nrosocio);
+end;
+
+var cant : integer;
+begin
+  if a=nil then moduloE:=0
   else begin 
-    if a^.hi <> nil then moduloE(a^.hi,nrosocio,cant);
-      while a^.dato.listadato <> nil do begin
-        if a^.dato.listadato^.dato.socio = nrosocio then
-          cant:=cant+1;
-        a^.dato.listadato:=a^.dato.listadato^.sig;
-        end;
-    if a^.hd <> nil then moduloE(a^.hd,nrosocio,cant);
+    cant:=recorrerlista(a^.dato.listadato,nrosocio);
+    moduloE:= cant + moduloE(a^.hi,nrosocio) + moduloE(a^.hd,nrosocio);
     end;
 end;
 
 
-procedure moduloF( a1 : arbol1; var a3 : arbol3);
+procedure moduloF( a1 : arbol1; var l: lista3);
 
-procedure insertararbol3(var a:arbol3; codigo : integer);
+procedure agregaradelante(var l : lista3; r : reglista3);
+var aux : lista3;
 begin
-  if a=nil then begin
-    new(a);
-    a^.dato.isbn:=codigo;
-    a^.dato.cantprest := 1;
-    a^.hi:=nil;
-    a^.hd := nil;
-    end
-    else if 
-      codigo = a^.dato.isbn then 
-      a^.dato.cantprest := a^.dato.cantprest + 1
-      else if a^.dato.isbn < codigo then insertararbol3(a^.hd,codigo)
-      else insertararbol3(a^.hi,codigo);
-      end;
-
-
-procedure generararbol(var a3 : arbol3; a1:arbol1);
-begin
-  if a1<>nil then begin
-    generararbol(a3,a1^.hi);
-    insertararbol3(a3,a1^.dato.isbn);
-    generararbol(a3,a1^.hd);
-    end;
+    new(aux);
+    aux^.dato:=r;
+    aux^.sig:=l;
+    l:=aux;
 end;
 
+var 
+  re : reglista3;
+
 begin
-  a3 := nil;
-  generararbol(a3,a1);
-  writeln('El arbol numero 3 se ha generado con exito');
+  if a1 <>nil then begin
+  if a1^.hd <> nil then moduloF(a1^.hd,l);
+  re.isbn:=a1^.dato.isbn;
+  re.cantprest:=1;
+  if (l<>nil) and (l^.dato.isbn = re.isbn) then
+     l^.dato.cantprest := l^.dato.cantprest + 1
+    else
+    agregaradelante(l,re);
+  
+  if a1^.hi <> nil then moduloF(a1^.hi,l);
+  end;
 end;
 
-procedure imprimirarbol1(a : arbol1);
+function recorrerlis3(l : lista): integer;
 begin
-  if a<>nil then begin
-    writeln('Isbn: ',a^.dato.isbn);
-    writeln('Socio: ',a^.dato.socio);
-    writeln('Dia/mes: ',a^.dato.dia,'/',a^.dato.mes);
-    writeln('Dias prestados: ',a^.dato.cdp);
-    writeln('-----------');
-    if a^.hi <> nil then imprimirarbol1(a^.hi);
-    if a^.hd <> nil then imprimirarbol1(a^.hd);
-    end;
+  if l = nil then recorrerlis3 := 0
+  else recorrerlis3:= 1 + recorrerlis3(l^.sig);
 end;
 
-procedure moduloG(var a4 : arbol3; a2 : arbol2);
+procedure moduloG(a2 : arbol2;var ll : lista3);
 
-procedure insertararbol4(var a : arbol3;codigo : integer; cant : integer);
+procedure agregarade2(var ll : lista3; r: reglista3);
+var aux : lista3;
 begin
-  if a = nil then begin
-    new(a);
-    a^.dato.isbn := codigo;
-    a^.dato.cantprest := 1;
-    a^.hi := nil;
-    a^.hd:= nil;
-    end
-    else if a^.dato.isbn < codigo then insertararbol4(a^.hi,codigo,cant)
-    else insertararbol4(a^.hd,codigo,cant);
+    new(aux);
+    aux^.dato:=r;
+    aux^.sig:=ll;
+    ll:=aux;
 end;
 
-procedure generararbol4(var a4 : arbol3;a2 : arbol2);
-var cant : integer; l : lista;
+var re:reglista3;
 begin
-  if a4<>nil then begin
-    l:=a2^.dato.listadato;
-    if a2^.hi <> nil then generararbol4(a4,a2^.hi);
-      cant := 0;
-      while l<> nil do begin
-        cant := cant + 1;
-        l:= l^.sig;
-      end;
-    insertararbol4(a4,a2^.dato.isbn,cant);
-    generararbol4(a4,a2);
-    end;
+  if a2^.hd <> nil then moduloG(a2^.hd,ll);
+  re.isbn := a2^.dato.isbn;
+  re.cantprest:=recorrerlis3(a2^.dato.listadato);
+  agregarade2(ll,re);
+  if a2^.hi <> nil then moduloG(a2^.hi,ll);
 end;
+
+procedure moduloH(ll : lista3);
 begin
-  a4 :=nil;
-  generararbol4(a4,a2);
-  writeln('El arbol numero 4 se ha generado con exito');
+    if ll <> nil then begin
+    Writeln('Codigo: ',ll^.dato.isbn);
+    writeln('Prestamos: ',ll^.dato.cantprest);
+    moduloH(ll^.sig);
+  end;
 end;
 
 function moduloI(a : arbol1; izq,der : integer):integer;
 begin
   if a=nil then moduloI:=0
-  else if (a^.dato.isbn >= izq) and (a^.dato.isbn <= der) then
-    moduloI:=1 + moduloI(a^.hi,izq,der) + moduloI(a^.hd,izq,der)
-    else if (a^.dato.isbn > izq) then if a^.hi <> nil then moduloI(a^.hi,izq,der)
-      else if (a^.dato.isbn) < der then if a^.hd <> nil then moduloI(a^.hd,izq,der);
+  else 
+    if (a^.dato.isbn >= izq) then 
+      if a^.dato.isbn <= der then
+        moduloI:= 1 + moduloI(a^.hi,izq,der)+moduloI(a^.hd,izq,der)
+        else moduloI:=moduloI(a^.hi,izq,der)
+   else moduloI:=moduloI(a^.hd,izq,der);
 end;
 
-function moduloJ(a : arbol, min,max : integer): integer;
+function moduloJ(a2 : arbol2; izq,der : integer): integer;
 
-procedure recorrerlista(l : lista; var cant : integer);
 begin
-  while l<>nil do begin
-    cant := cant + 1;
-    l := l^.sig;
+	if a2 = nil then moduloJ :=0
+		else 
+        if a2^.dato.isbn >= izq then
+          if a2^.dato.isbn <= der then
+            moduloJ:= recorrerlis3(a2^.dato.listadato) + moduloJ(a2^.hi,izq,der) + moduloJ(a2^.hd,izq,der)
+            else moduloJ := moduloJ(a2^.hi,izq,der)
+          else moduloJ:= moduloJ(a2^.hd,izq,der)         
+end;          
+
+procedure imprimirarbol1(a : arbol1);
+begin
+  if a<>nil then begin
+  if a^.hi <> nil then imprimirarbol1(a^.hi);
+    writeln('Isbn: ',a^.dato.isbn);
+    writeln('Socio: ',a^.dato.socio);
+    writeln('Dia/mes: ',a^.dato.dia,'/',a^.dato.mes);
+    writeln('Dias prestados: ',a^.dato.cdp);
+    writeln('-----------');
+    if a^.hd <> nil then imprimirarbol1(a^.hd);
     end;
 end;
-var cant:integer;
-begin
-	if a = nil then moduloJ :=0
-		else begin
-		  
-     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 var
   a1 : arbol1;
   a2 : arbol2;
-  a3 : arbol3;
+  l,ll : lista3;
   cantd, min,max : integer;
   sociod : integer;
 begin
+  l := nil;
+  ll:=nil;
   randomize;
   moduloA(a1,a2);
   imprimirarbol1(a1);
@@ -328,17 +300,23 @@ begin
   Writeln('E1 - El socio ',sociod,' tuvo un total de ',cantd,' prestamos.');
   writeln;
   cantd:=0;
-  moduloE(a2,sociod,cantd);
+  cantd:=moduloE(a2,sociod);
   Writeln('E2 - El socio ',sociod,' tuvo un total de ',cantd,' prestamos.');
   writeln;
-  writeln('Arbol 3');
+  writeln('Lista 1:');
   writeln;
-  moduloF(a1,a3);
+  moduloF(a1,l);
+  writeln('f');
   writeln;
+  moduloG(a2,ll);
+  writeln;
+  moduloH(ll);
   writeln('Escriba dos numeros dentro del rango [100,1900]');
   writeln('Min: ');readln(min);
   writeln;
   writeln('Max: ');readln(max);
   writeln;
-  writeln('La cantidad de socios dentro del rango especificado es: ', moduloI(a1,min,max));
+  writeln('E1 --> La cantidad de prestamos dentro del rango especificado es: ', moduloI(a1,min,max));
+  writeln;
+  writeln('E2 --> La cantidad de prestamos dentro del rango especificado es: ', moduloJ(a2,min,max));
 end.

@@ -1,149 +1,158 @@
-Program parcial;
+Program Parcial;
+
 Const
-  dimf=12;
-type
-  
+  dimf = 12;
+
+Type
   consulta = record
     matricula : integer;
     dni : integer;
     mes : integer;
     diagnos : char;
-    end;
+  end;
   
   regarbol = record
     dni : integer;
     diagnos : char;
-    end;
+  end;
 
   arbol = ^nodoarbol;
   
   nodoarbol = record
     dato : regarbol;
-    hi : arbol;
-    hd : arbol;
-    end;
+    hi   : arbol;
+    hd   : arbol;
+  end;
 
   vector = array[1..dimf] of arbol;
-    
-procedure moduloA(var v:vector);
+  
+Procedure moduloA(var v: vector);
 
-  procedure leerconsulta(var c : consulta);
-  var v : array[1..5] of char = ('L','M','N','O','P');
-  begin
+  Procedure leerconsulta(var c: consulta);
+  Var 
+    v : array[1..5] of char = ('L', 'M', 'N', 'O', 'P');
+  Begin
     c.matricula := random(100);
     if c.matricula <> 0 then begin
-      c.dni := random(40)+1;
-      c.mes := random(12)+1;
-      c.diagnos:=v[random(5)+1];
-      end;
-  end;
- 
-  procedure iniciarvector(var v : vector; diml : integer);
-  begin
+      c.dni := random(40) + 1;
+      c.mes := random(12) + 1;
+      c.diagnos := v[random(5) + 1];
+    end;
+  End;
+  
+  Procedure iniciarvector(var v: vector; diml: integer);
+  Begin
     if diml <= dimf then begin
-      v[diml]:=nil;
-      iniciarvector(v,diml+1);
-      end;
-  end;
+      v[diml] := nil;
+      iniciarvector(v, diml + 1);
+    end;
+  End;
 
-  procedure insertararbol(var a: arbol; r : regarbol);
-  begin
+  Procedure insertararbol(var a: arbol; r: regarbol);
+  Begin
     if a = nil then begin
       new(a);
-      a^.dato:=r;
+      a^.dato := r;
       a^.hi := nil;
       a^.hd := nil;
-      end
-      else if r.dni < a^.dato.dni then insertararbol(a^.hi,r)
-      else insertararbol(a^.hd,r);
-  end;
+    end
+    else if r.dni < a^.dato.dni then 
+      insertararbol(a^.hi, r)
+    else 
+      insertararbol(a^.hd, r);
+  End;
 
-var
+Var
   c : consulta;
   r : regarbol;
-begin
-  iniciarvector(v,1);
+Begin
+  iniciarvector(v, 1);
   leerconsulta(c);
   while c.matricula <> 0 do begin
     r.dni := c.dni;
     r.diagnos := c.diagnos;
-    insertararbol(v[c.mes],r);
+    insertararbol(v[c.mes], r);
     leerconsulta(c);
-    end;
-end;
-
- function contararbol(a : arbol):integer;
-  begin
-    if a = nil then contararbol := 0
-    else 
-      contararbol:= 1 + contararbol(a^.hi)+contararbol(a^.hd);
   end;
+End;
 
-procedure moduloB(v : vector; var mesmax, maxcant : integer; diml : integer);
+Function contararbol(a: arbol): integer;
+Begin
+  if a = nil then 
+    contararbol := 0
+  else 
+    contararbol := 1 + contararbol(a^.hi) + contararbol(a^.hd);
+End;
 
-begin
-  if diml<=dimf then begin
+Procedure moduloB(v: vector; var mesmax, maxcant: integer; diml: integer);
+Begin
+  if diml <= dimf then begin
     if contararbol(v[diml]) > maxcant then begin
       mesmax := diml;
       maxcant := contararbol(v[diml]);
-      end;
-    moduloB(v,mesmax,maxcant,diml+1);
     end;
-end;
-    
-function moduloC(v : vector; dni : integer): boolean;
-
-   function recorrerarbol(a : arbol; dni : integer): boolean;
-   begin
-     if a = nil then recorrerarbol := false
-     else
-       if a^.dato.dni = dni then recorrerarbol:=true
-       else if dni < a^.dato.dni then recorrerarbol:=recorrerarbol(a^.hi,dni)
-       else recorrerarbol:=recorrerarbol(a^.hd,dni);
-   end;
-
-var
-esta : boolean;
-i : integer;
-begin
-  i:=1;
-  esta :=false;
-  while (i<=dimf) and (esta=false) do begin
-    esta:=recorrerarbol(v[i],dni);
-    i:=i+1;
-    end;
-  moduloC:=esta;
-end;
-
-procedure imprimirvector(v : vector);
-var i : integer;
-begin
-  for i:=1 to 12 do begin
-    writeln('-----------');
-    writeln('El mes ',i,' tuvo ',contararbol(v[i]),' consultas');
+    moduloB(v, mesmax, maxcant, diml + 1);
   end;
-end;
-var
-  v : vector;
-  mesmax, maxcant : integer;
-  dnix : integer;
-begin
+End;
+
+Function moduloC(v: vector; dni: integer): boolean;
+
+  Function recorrerarbol(a: arbol; dni: integer): boolean;
+  Begin
+    if a = nil then 
+      recorrerarbol := false
+    else if a^.dato.dni = dni then 
+      recorrerarbol := true
+    else if dni < a^.dato.dni then 
+      recorrerarbol := recorrerarbol(a^.hi, dni)
+    else 
+      recorrerarbol := recorrerarbol(a^.hd, dni);
+  End;
+
+Var
+  esta: boolean;
+  i: integer;
+Begin
+  i := 1;
+  esta := false;
+  while (i <= dimf) and (esta = false) do begin
+    esta := recorrerarbol(v[i], dni);
+    i := i + 1;
+  end;
+  moduloC := esta;
+End;
+
+Procedure imprimirvector(v: vector);
+Var
+  i: integer;
+Begin
+  for i := 1 to 12 do begin
+    writeln('-----------');
+    writeln('El mes ', i, ' tuvo ', contararbol(v[i]), ' consultas');
+  end;
+End;
+
+Var
+  v: vector;
+  mesmax, maxcant: integer;
+  dnix: integer;
+Begin
   randomize;
   moduloA(v);
   writeln('El vector se ha generado correctamente');
   writeln;
   imprimirvector(v);
   writeln;
-  maxcant:=-1;
-  moduloB(v,mesmax,maxcant,1);
-  writeln('El mes que mas consultas tuvo fue el mes  ', mesmax);
+  maxcant := -1;
+  moduloB(v, mesmax, maxcant, 1);
+  writeln('El mes que más consultas tuvo fue el mes ', mesmax);
   writeln;
-  writeln('Escriba el dni que desea consultar: ');readln(dnix);
+  writeln('Escriba el DNI que desea consultar: '); readln(dnix);
   writeln;
-  if moduloC(v,dnix) = true then
-    writeln('El paciente con dni ', dnix,' ha sido atendido')
-    else writeln('El paciente con dni ',dnix,' NO ha sido atendido');
-  end.
-
+  if moduloC(v, dnix) then
+    writeln('El paciente con DNI ', dnix, ' ha sido atendido')
+  else
+    writeln('El paciente con DNI ', dnix, ' NO ha sido atendido');
+End.
 
 

@@ -1,16 +1,3 @@
-{Un supermercado requiere el procesamiento de sus productos. De cada producto se
-conoce código, rubro (1..10), stock y precio unitario. Se pide:
-a) Generar una estructura adecuada que permita agrupar los productos por rubro. A su
-vez, para cada rubro, se requiere que la búsqueda de un producto por código sea lo
-más eficiente posible. El ingreso finaliza con el código de producto igual a 0.
-b) Implementar un módulo que reciba la estructura generada en a), un rubro y un código
-de producto y retorne si dicho código existe o no para ese rubro.
-c) Implementar un módulo que reciba la estructura generada en a), y retorne, para cada
-rubro, el código y stock del producto con mayor código.
-d) Implementar un módulo que reciba la estructura generada en a), dos códigos y
-retorne, para cada rubro, la cantidad de productos con códigos entre los dos valores
-ingresados.}
-
 Program adi3;
 const
   dimf = 10;
@@ -48,7 +35,7 @@ procedure moduloA(var v:vector; var diml : integer);
     p.codigo := random(51);
     if p.codigo <> 0 then begin
       p.rubro := random(10)+1;
-      p.stock := random(20);
+      p.stock := random(20)+1;
       p.precio := random(300)/10;
       end;
   end;
@@ -78,7 +65,7 @@ procedure moduloA(var v:vector; var diml : integer);
 var
  p : producto;
 begin
-  iniciararboles(v,diml+1);
+  iniciararboles(v,1);
   leerinformacion(p);
   while p.codigo <> 0 do begin
     if v[p.rubro] = nil then
@@ -108,7 +95,7 @@ procedure moduloC(v : vector; diml : integer);
   procedure recorrerarboles(a : arbol; var codemayor : integer; var stockmayor : integer);
   begin
     if a <> nil then
-      if a^.HD = nil then begin
+      if a^.hd = nil then begin
         codemayor:= a^.dato.codigo;
         stockmayor := a^.dato.stock;
         end
@@ -122,14 +109,32 @@ begin
     stockmayor:=-1;
     codemayor:=-1;
     recorrerarboles(v[diml],codemayor,stockmayor);
-    writeln('Para el rubro ',diml, 'Codigo mayor : ',codemayor,' - stock: ',stockmayor);
+    writeln('Para el rubro ',diml, ' -- Codigo mas grande : ',codemayor,'  -- stock: ',stockmayor);
     moduloC(v,diml-1);
     end;
 end;
 
-procedure moduloD(v : vector; izq,der : integer);
-
-
+procedure moduloD(v : vector; izq,der : integer; diml : integer);
+  function recorrerarbol(a : arbol; izq,der : integer): integer;
+  begin
+    if a = nil then recorrerarbol := 0
+    else
+      if a^.dato.codigo >= izq then
+        if a^.dato.codigo <= der then
+          recorrerarbol:= 1 + recorrerarbol(a^.hi,izq,der) + recorrerarbol(a^.hd,izq,der)
+        else recorrerarbol:= recorrerarbol(a^.hi,izq,der)
+      else recorrerarbol := recorrerarbol(a^.hd,izq,der);
+  end;
+var
+  cant : integer;
+begin
+  if diml > 0 then begin
+    cant := recorrerarbol(v[diml],izq,der);
+    writeln('----------------');
+    writeln('Para el rubro ',diml,' Hay ', cant,' codigos entre los valores ingresados');
+    moduloD(v,izq,der,diml-1);
+  end;
+end;
    
         
 
@@ -143,7 +148,9 @@ var
  rub : subrango;
   v : vector;
   code : integer;
+  izq, der : integer;
 begin
+  randomize;
   diml := 0;
   moduloA(v,diml);
   writeln('El vector de arboles se ha generado correctamente');
@@ -151,6 +158,7 @@ begin
   writeln('Escriba un rubro (1..10) y un codigo de producto (1..50)');
   writeln;
   writeln('Rubro: ');readln(rub);
+  writeln;
   writeln('Codigo: ');readln(code);
   writeln;
   if moduloB(v,rub,code) = true then
@@ -158,9 +166,10 @@ begin
     else writeln('El codigo ingresado no existe en dicho rubro');
   writeln;
   moduloC(v,diml);
+  writeln;
+  writeln('Ingrese dos valores entre 1 y 50');
+  writeln;
+  writeln('Min: ');readln(izq);
+  writeln('Max: ');readln(der);
+  moduloD(v,izq,der,diml);
 end.
-  
-  
-
-
-

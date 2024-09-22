@@ -21,7 +21,7 @@ Post-condicional
   o 
   "for (int i=1; i<=10;System.out.println(i++);
     System.out.println(i);"
----------------------------------
+----------------------------------
   VECTOR
   - DECLARACION: TipoElemento [] nombreVariable;
   - CREACION: nombreVariable = new TipoElemento[DIMF]

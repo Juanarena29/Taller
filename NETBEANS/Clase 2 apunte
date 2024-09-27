@@ -1,0 +1,21 @@
+   -Puede devolver un dato (resultado del metodo)
+
+-CLASE: describe un conjunto de objetos comunes (mismo tipo).
+Consta de: 
+ -La declaracion de las v.i que implementan el estado del objeto.
+ -La codificacion de los metodos que implementan su comportamiento.
+
+-Un objeto se crea a partir de una clase (el objeto es una instancia de una clase). 
+
+-La instaciacion se realiza enviando un mensaje de creacion a la clase.
+ . Reserva de espacio para el objeto
+ . Ejecucion dle codigo inicializador o constructor.
+-Devuelve la referencia al objeto
+-Asociar la referencia a una variable (a traves de ella podemos enviarle mensajes al objeto).
+ -> new Triangulo(10,10,10,"Amarillo","Violeta") 5 parametros, 3 int y 2 string.
+
+Los programas se organizan como una coleccion de objetos que cooperan entre si enviandose mensajes.
+Cada objeto es instancia de una clase.
+Los objetos se crean a medida que se necesita.
+El USUARIO le envia un mensaje a un objeto, en caso de que un objeto conozca a otro puede enviarle un mensaje, asi los mensajes fluyen por el sistema.
+Cuando los objetos ya no son necesarios se borran de la memoria. 

@@ -1,13 +1,4 @@
-   -Puede devolver un dato (resultado del metodo)
-
--CLASE: describe un conjunto de objetos comunes (mismo tipo).
-Consta de: 
- -La declaracion de las v.i que implementan el estado del objeto.
- -La codificacion de los metodos que implementan su comportamiento.
-
--Un objeto se crea a partir de una clase (el objeto es una instancia de una clase). 
-
--La instaciacion se realiza enviando un mensaje de creacion a la clase.
+creacion a la clase.
  . Reserva de espacio para el objeto
  . Ejecucion dle codigo inicializador o constructor.
 -Devuelve la referencia al objeto
@@ -19,3 +10,30 @@ Cada objeto es instancia de una clase.
 Los objetos se crean a medida que se necesita.
 El USUARIO le envia un mensaje a un objeto, en caso de que un objeto conozca a otro puede enviarle un mensaje, asi los mensajes fluyen por el sistema.
 Cuando los objetos ya no son necesarios se borran de la memoria. 
+
+REFERENCIAS:
+String saludo1 = new String("hola");
+String saludo2 = new String("hola");
+si ahora 
+saludo1 = saludo2 entonces la variable saludo ahora apunta a la posicion de memoria de saludo 2 (creada con el new) y el recolector de basura se encarga de eliminar el contenido de la posicion de memoria a la que apuntaba saludo1 antes de la asignacion.
+
+Si comparo dos objetos con == o !=, lo que estoy comparando es si estan apuntando a la misma posicion de memoria
+si yo quiero saber si dos objetos tienen los mismos valores adentro, necesito utilizar el metodo EQUALS
+
+Si yo:
+string test1 = "hola";
+string test2 = "hola";
+boolean iguales = test1 == test2;
+System.out.println(iguales) devuelve TRUE
+como estoy comparando dos strings que son iguales, java no crea un nuevo string en memoria porque se da cuenta que estoy usando el mismo string (hola) y le asigna a las dos variables, la misma posicion de memoria (donde esta el string "hola");
+
+si ahora cambio test2 por
+string test2 = new string("hola");
+ devuelve FALSO, porque ahora test1 tiene una posicion de memoria y test2, con el new, otra.
+Si quiero comparar test1 con lo que hay en la posicion de memoria test2, siguiente linea.
+
+boolean valoresIguales = test2.equals(test1);
+
+el equals necesita un objeto como parametro (en este caso test1); equals compara el contenido de los objetos y no las direcciones de memoria.
+
+

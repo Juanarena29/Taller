@@ -1,4 +1,4 @@
-package tema1;
+packagepackage tema1;
 
 import PaqueteLectura.GeneradorAleatorio;
 import PaqueteLectura.Lector;
@@ -6,44 +6,78 @@ import PaqueteLectura.Lector;
 public class Ej03Matrices {
 
     public static void main(String[] args) {
-	GeneradorAleatorio.iniciar();
-	int [][] matriz = new int [5][5];
-        int i;
-        int j;
-        int [] vector = new int [5];
-        int suma = 0;
-        for (i=0;i<5;i++)
-            for (j=0;j<5;j++)
-                matriz[i][j]=GeneradorAleatorio.generarInt(31);
-        for (i=0;i<5;i++) {
+        GeneradorAleatorio.iniciar();
+        int i = 0, j = 0, suma = 0;
+        int[][] matriz = new int[5][5];  // Definición de la matriz 5x5
+        int[] vector = new int[5];       // Vector de 5 posiciones
+
+        // Inicialización de la matriz con números aleatorios entre 0 y 30
+        for (i = 0; i < 5; i++) {
+            for (j = 0; j < 5; j++) {
+                matriz[i][j] = GeneradorAleatorio.generarInt(31);  // Cambiado el límite a 31
+            }
+        }
+
+        // Mostrar la matriz en consola
+        System.out.println("MATRIZ GENERADA:");
+        for (i = 0; i < 5; i++) {
+            System.out.println("--------------------------------");
+            for (j = 0; j < 5; j++) {
+                System.out.print(" | " + matriz[i][j]);
+            }
             System.out.println();
-            for (j=0;j<5;j++)
-                System.out.print(matriz[i][j]+" | ");
+        } 
+        System.out.println("--------------------------------");
+
+        // Calcular la suma de los elementos de la fila 1
+        suma = 0;  // Reiniciar la suma
+        for (j = 0; j < 5; j++) {
+            suma = suma + matriz[1][j];
         }
-        for (j=0; j<5; j++)
-            suma = suma + matriz[0][j];
-        System.out.println();
-        System.out.println("Suma total de la fila 1 "+suma);
-        for (i=0;i<5;i++) {
-            int aux = 0;
-            for (j=0;j<5;j++) 
-                aux = aux + matriz[j][i];
-            vector[i]=aux;
+        System.out.println("\nLa suma de los elementos de la fila 1 es: " + suma);
+
+        // Generar un vector con la suma de los elementos de cada columna
+        for (j = 0; j < 5; j++) {
+            suma = 0;
+            for (i = 0; i < 5; i++) {
+                suma = suma + matriz[i][j];
+            }
+            vector[j] = suma;
         }
-        for (i=0;i<5;i++) {
-            System.out.print(vector[i]+" | "); 
+
+        // Mostrar el vector en consola
+        System.out.println("\nVECTOR GENERADO:");
+        for (j = 0; j < 5; j++) {
+            System.out.print(vector[j] + " | ");
         }
-        boolean encontro = false;
-        System.out.println();
-        System.out.println("Escriba un Numero: ");
-        int Num = Lector.leerInt();
-        i = 0;
-        while (encontro==false && i<5) {
-          if (Num==vector[i])
-              encontro= true;
-          i++;
-      }
-        if (encontro==true)
-            System.out.println("El numero "+Num+" se encuentra en el vector");
-        else System.out.println("El numero "+Num+" NO se encuentra en el vector");
+        System.out.println();  // Salto de línea
+
+        // Leer un valor entero e indicar si se encuentra en la matriz
+        boolean esta = false;
+        int num, je = 0, ie = 0;
+
+        System.out.println("\nIngrese un entero del 0 al 30:");
+        num = Lector.leerInt();  // Leer número del usuario
+
+        i = 0;  // Reiniciar el valor de i para la búsqueda
+        while (!esta && i < 5) {
+            j = 0;
+            while (!esta && j < 5) {
+                if (matriz[i][j] == num) {
+                    esta = true;
+                    je = j;
+                    ie = i;
+                }
+                j++;
+            }
+            i++;
+        }
+
+        // Indicar si se encontró el número en la matriz
+        if (esta) {
+            System.out.println("El número leído (" + num + ") se encuentra en la posición (" + ie + "," + je + ") de la matriz");
+        } else {
+            System.out.println("El número leído no se encuentra en la matriz");
+        }
     }
+}

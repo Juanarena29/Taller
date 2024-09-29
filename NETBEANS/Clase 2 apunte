@@ -36,4 +36,25 @@ boolean valoresIguales = test2.equals(test1);
 
 el equals necesita un objeto como parametro (en este caso test1); equals compara el contenido de los objetos y no las direcciones de memoria.
 
+------------------
+-CLASE: Grupo de objetos con caracteristicas similares.
+
+-OBJETO: Conjunto de atributos y métodos, un objeto se deriva de una clase
+
+-ATRIBUTOS: Caracteristicas del objeto
+-METODOS: Acciones que realiza el objeto
+
+-ABSTRACCION: Proceso mental de extraccion de las caracteristicas esenciales de algo, ignorando los detalles superfluos.
+
+ENCAPSULAMIENTO: Proceso por el que se ocultan los detalles del soporte de las caracteristicas de una abstrucción.
+
+-HERENCIA: Es donde una clase nueva se crea a partir de una clase existente, heredando todos sus atributos y métodos.
+
+-POLIMORFISMO: Cualidad que poseen los objetos para responder de distinto modo ante el mismo mensaje.
+
+--------
+Crear objeto tipo string
+
+String test = "Hola desde JAVA"
+test.(opciones) para trabajar con el objeto
 

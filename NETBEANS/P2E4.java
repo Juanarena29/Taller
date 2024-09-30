@@ -21,20 +21,26 @@ public class ejj4 {
                  edad=GeneradorAleatorio.generarInt(90);
                  diaint=GeneradorAleatorio.generarInt(dias);
                  System.out.println("DNI: "+DNI+"DIA SOLICITADO: "+diaint);
-                 if (matriz[diaint][7]==null) {
-                    int aux=0; //aux para ver si hay espacio libre en la fila del dia solicitado
-                    while (matriz[diaint][aux]!=null) {
-                        aux++;
-                    }
-                    matriz[diaint][aux] = new Persona (nombre, DNI, edad);
+                 int aux = 0;
+                 while (aux < pers && matriz[diaint][aux]!=null) {
+                     aux++; //busco posicion libre en la fila
                  }
-                matriz[i][j]= new Persona (nombre, DNI ,edad);
-                nombre=GeneradorAleatorio.generarString(3);
+                 if (aux<pers) { //si hay posicion libre en la fila, se la inserto
+                     matriz[diaint][aux] = new Persona(nombre,DNI,edad);
+                     dimL++;
+                 } else { //si no hay lugar lo inserto en la posicion q va
+                     matriz[i][j] = new Persona(nombre,DNI,edad);
+                     dimL++;
+                 }
+                nombre=GeneradorAleatorio.generarString(3);              
             }
             i++; 
         }
-        for (i=0;(i<5) && (dimL<=dimF);i++)
-            for (j=0;(j<8) && (dimL<=dimF);j++)
-                System.out.println("DIA : "+(i+1)+" | TURNO : "+(j+1)+" | "+matriz[i][j].toString());
+        int k=0;
+        for (i=0;(i<5) && (k<dimL);i++)
+            for (j=0;(j<8) && (k<dimL);j++) {
+                 System.out.println("DIA : "+(i+1)+" | TURNO : "+(j+1)+" | "+matriz[i][j].toString());
+                 k++;              
+            }
     }    
 }

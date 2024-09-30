@@ -1,0 +1,17 @@
+Declaracion del comportamiento
+Sintaxis:
+
+public TipoRetorno nombreMetodo (lista de parametros) {
+/* declaracion de variables locales al metodo */
+/*cuerpo del metodo */
+}
+
+Public: indica que el metodo forma parte de la interfaz
+TipoRetorno: tipo de dato primitivo / nombre de clase / void (no retorno)
+nombreMetodo: verbo seguido de palabras. Convencion de nombres.
+Lista de parametros: datos de tipos primitivos u objetos
+-TipoPrimitivo nombreParam 
+-Separacion por coma
+-Pasaje por valor unicamente
+Declaracion de variables locales. Ambito, tiempo de vida (declaracion idem que en Main)
+Cuerpo: codigo que puede utilizar estado y modificarlo (v.i.) - devolver resultado con
